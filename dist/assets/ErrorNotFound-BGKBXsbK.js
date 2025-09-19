@@ -1,0 +1,1 @@
+import{ak as n,d as o,o as t,f as e,y as s}from"./index-BoMXOFZy.js";const a={};function l(f,r){return t(),o(s,null,[r[0]||(r[0]=e("h1",null,"Упс...",-1)),r[1]||(r[1]=e("p",null,"Тут ничего нет",-1))],64)}const d=n(a,[["render",l]]);export{d as default};
