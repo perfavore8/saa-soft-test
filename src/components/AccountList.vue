@@ -74,24 +74,21 @@
           @focusout="validateEditAccount"
         />
 
-        <IconField
+        <AppPasswordInput
           style="width: fit-content"
           v-if="getCorrectAccount(account, index).recordType !== 'LDAP'"
         >
-          <InputText
-            :type="togglePasswordList[index] ? 'text' : 'password'"
-            :invalid="!getCorrectAccount(account, index).password"
-            v-model="getCorrectAccount(account, index).password"
-            maxlength="100"
-            @focusin="setEditAccount(account, index)"
-            @focusout="validateEditAccount"
-          />
-          <InputIcon
-            class="pi clickable"
-            :class="[togglePasswordList[index] ? 'pi-eye-slash' : 'pi-eye']"
-            @click.stop="togglePasswordVisible(index)"
-          />
-        </IconField>
+          <template #default="{ showPassword }">
+            <InputText
+              :type="showPassword ? 'text' : 'password'"
+              :invalid="!getCorrectAccount(account, index).password"
+              v-model="getCorrectAccount(account, index).password"
+              maxlength="100"
+              @focusin="setEditAccount(account, index)"
+              @focusout="validateEditAccount"
+            />
+          </template>
+        </AppPasswordInput>
 
         <i
           class="pi pi-trash clickable delete"
@@ -145,8 +142,6 @@ aside {
 
 <script setup lang="ts">
 import InputText from 'primevue/inputtext';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
 import Select from 'primevue/select';
 import { useAccountStore } from '../stores/account.ts';
 import { storeToRefs } from 'pinia';
@@ -156,6 +151,7 @@ import {
   accountMarkSeparator,
 } from '../types/account.ts';
 import { computed, ref } from 'vue';
+import AppPasswordInput from './AppPasswordInput.vue';
 
 const accountStore = useAccountStore();
 const { accounts } = storeToRefs(accountStore);
@@ -223,12 +219,6 @@ const removeAccount = (idx: number) => {
   const isNew = idx >= accounts.value.length;
   if (isNew) return newAccounts.value.splice(idx - accounts.value.length, 1);
   accountStore.removeAccount(idx);
-};
-
-const togglePasswordList = ref<boolean[]>([]); //TODO
-const togglePasswordVisible = (idx: number) => {
-  const target = togglePasswordList.value[idx];
-  togglePasswordList.value[idx] = !target;
 };
 
 type RecordTypeOption = { name: string; value: RecordType };
